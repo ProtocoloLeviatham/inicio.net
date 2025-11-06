@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Protocolo Leviatham</title>
+    <!-- Carga de Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Carga de la fuente Inter y Share Tech Mono -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <style>
+        /* Estilos personalizados */
+        body {
+            /* Fuente principal Inter para texto legible */
+            font-family: 'Inter', sans-serif;
+            background-color: #1a0b2e;
+            color: #e0e0e0;
+            overflow-x: hidden; /* Evita el scroll horizontal */
+        }
+        
+        /* Estilo para la fuente del efecto matrix y títulos "hacker" */
+        .font-matrix {
+            font-family: 'Share Tech Mono', monospace;
+        }
+
+        /* Canvas para el fondo animado */
+        #matrix-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1; /* Detrás de todo el contenido */
+            opacity: 0.3;
+        }
+
+        /* Contenedor principal para centrar contenido sobre el canvas */
+        .main-container {
+            position: relative;
+            z-index: 1;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Efecto de neón/brillo para los colaboradores */
+        @keyframes neon-glow {
+            0%, 100% {
+                text-shadow: 0 0 5px #c039ff, 0 0 10px #c039ff, 0 0 15px #c039ff, 0 0 20px #9d00ff, 0 0 30px #9d00ff;
+            }
+            50% {
+                text-shadow: 0 0 10px #c039ff, 0 0 15px #c039ff, 0 0 25px #9d00ff, 0 0 35px #9d00ff, 0 0 45px #9d00ff;
+            }
+        }
+
+        .collaborator-card {
+            background-color: rgba(26, 11, 46, 0.6);
+            border: 1px solid #6d28d9;
+            backdrop-filter: blur(5px);
+            transition: all 0.3s ease;
+        }
+
+        .collaborator-card:hover {
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 0 0 15px #6d28d9, 0 0 25px #6d28d9;
+        }
+        
+        .collaborator-name {
+            font-family: 'Share Tech Mono', monospace;
+            color: #e9d5ff;
+            animation: neon-glow 2.5s ease-in-out infinite;
+        }
+        
+        /* Líneas decorativas en los bordes */
+        .border-line {
+            position: fixed;
+            background: #6d28d9;
+            box-shadow: 0 0 10px #6d28d9;
+        }
+        
+        .line-left {
+            top: 0;
+            left: 10px;
+            width: 2px;
+            height: 100%;
+            opacity: 0.5;
+        }
+        
+        .line-right {
+            top: 0;
+            right: 10px;
+            width: 2px;
+            height: 100%;
+            opacity: 0.5;
+        }
+
+        /* Usar la fuente hacker para los títulos principales */
+        .font-matrix-title {
+            font-family: 'Share Tech Mono', monospace;
+        }
+
+        @media (max-width: 768px) {
+            .line-left, .line-right {
+                left: 5px;
+                right: 5px;
+                width: 1px;
+            }
+        }
+    </style>
+</head>
+<body class="font-matrix"> <!-- La fuente base del body es la hacker -->
+
+    <!-- Canvas para el fondo animado -->
+    <canvas id="matrix-canvas"></canvas>
+
+    <!-- Líneas decorativas en los bordes -->
+    <div class="border-line line-left hidden md:block"></div>
+    <div class="border-line line-right hidden md:block"></div>
+
+    <div class="main-container p-4 md:p-8">
+        
+        <!-- Header y Menú de Navegación -->
+        <header class="w-full max-w-6xl mx-auto mb-16">
+            <nav class="flex flex-col md:flex-row justify-between items-center rounded-lg p-4" style="background-color: rgba(20, 5, 35, 0.7); border: 1px solid #4c1d95; backdrop-filter: blur(5px);">
+                <div class="text-2xl font-bold text-purple-300 mb-4 md:mb-0">Protocolo Leviatham</div>
+                <ul class="flex flex-wrap justify-center gap-x-4 gap-y-2 md:gap-x-6">
+                    <li><a href="#" class="text-gray-300 hover:text-purple-400 font-medium transition-colors duration-300 text-sm md:text-base">FORO</a></li>
+                    <li><a href="#" class="text-gray-300 hover:text-purple-400 font-medium transition-colors duration-300 text-sm md:text-base">COMUNIDAD</a></li>
+                    <li><a href="#" class="text-gray-300 hover:text-purple-400 font-medium transition-colors duration-300 text-sm md:text-base">HERRAMIENTAS</a></li>
+                    <li><a href="#" class="text-gray-300 hover:text-purple-400 font-medium transition-colors duration-300 text-sm md:text-base">CÓDIGOS</a></li>
+                    <li><a href="#" class="text-gray-300 hover:text-purple-400 font-medium transition-colors duration-300 text-sm md:text-base">SOPORTE</a></li>
+                </ul>
+            </nav>
+        </header>
+
+        <!-- Contenido Principal (Bienvenida) -->
+        <main class="flex-grow flex flex-col items-center justify-center text-center px-4">
+            <div class="p-8 rounded-xl max-w-3xl" style="background-color: rgba(20, 5, 35, 0.7); border: 1px solid #4c1d95; backdrop-filter: blur(5px);">
+                <h1 class="text-6xl md:text-8xl font-black text-purple-300 uppercase mb-6 font-matrix-title" style="text-shadow: 0 0 10px #9d00ff;">
+                    BIENVENIDO
+                </h1>
+                <!-- Texto de bienvenida legible con fuente Inter (font-sans) -->
+                <p class="font-sans text-lg md:text-2xl text-gray-200 leading-relaxed">
+                    Explora, aprende y comparte conocimientos de seguridad y hacking ético con nuestra comunidad.
+                </p>
+            </div>
+        </main>
+
+        <!-- =========== SECCIÓN DE NOTICIAS DIARIAS =========== -->
+        <!-- PARA EDITAR: Simplemente cambia el contenido dentro de las etiquetas <p>, <h4> y la URL de la imagen -->
+        <section class="w-full max-w-4xl mx-auto my-16 px-4">
+            <div class="rounded-lg p-6 md:p-8" style="background-color: rgba(20, 5, 35, 0.7); border: 1px solid #4c1d95; backdrop-filter: blur(5px);">
+                <h2 class="text-3xl font-bold text-purple-300 text-center mb-6 font-matrix-title">// NOTICIA DEL DÍA //</h2>
+                
+                <!-- Noticia 1 -->
+                <article class="border-b border-purple-800 pb-4 mb-4">
+                    
+                    <!-- Para añadir una imagen, descomenta la siguiente línea y pon la URL -->
+                    <!--
+                    <img src="https://placehold.co/800x400/1a0b2e/c039ff?text=Protocolo+Leviatham" alt="Imagen de la noticia" class="w-full h-auto max-h-72 object-cover rounded-md mb-4">
+                    -->
+                    
+                    <!-- Título de la noticia -->
+                    <h4 class="text-xl font-semibold text-gray-200 font-sans mb-3">Un Nuevo Comienzo: Mensaje del Fundador</h4>
+                    
+                    <!-- Cuerpo de la noticia (fuente legible) -->
+                    <p class="text-gray-300 font-sans leading-relaxed">
+                        Un mensaje de nuestro fundador, KaliHunter32:
+                        <br><br>
+                        "Durante años, formé parte de una gran comunidad en Telegram, conocido como el número 32. Mi especialidad siempre fue la seguridad ofensiva, analizando infraestructuras web y descubriendo fallos en sistemas. Sin embargo, con el tiempo, me di cuenta de que los objetivos de ese grupo ya no estaban alineados con mis propios principios.
+                        <br><br>
+                        Decidí alejarme por mi propia seguridad y para empezar algo nuevo. 'Protocolo Leviatham' nace de esa decisión. Mi objetivo es crear una comunidad sana, un lugar donde podamos aprender, compartir y mejorar juntos, siempre dentro del marco de la ética. Aquí, el conocimiento es para construir, no para destruir. Bienvenidos todos."
+                    </p>
+                </article>
+                
+                <!-- Puedes añadir más noticias copiando la estructura de <article> ... </article> -->
+
+            </div>
+        </section>
+        <!-- =================================================== -->
+
+
+        <!-- Sección de Colaboradores (en el footer) -->
+        <footer class="w-full max-w-6xl mx-auto mt-16 py-8">
+            <h3 class="text-center text-2xl text-purple-300 font-bold mb-8 font-matrix-title">// COLABORADORES //</h3>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- Colaborador 1 -->
+                <div class="collaborator-card rounded-lg p-6 text-center">
+                    <h4 class="collaborator-name text-2xl font-bold">system404g</h4>
+                </div>
+                <!-- Colaborador 2 -->
+                <div class="collaborator-card rounded-lg p-6 text-center">
+                    <h4 class="collaborator-name text-2xl font-bold">team virus</h4>
+                </div>
+                <!-- Colaborador 3 -->
+                <div class="collaborator-card rounded-lg p-6 text-center">
+                    <h4 class="collaborator-name text-2xl font-bold">lazarus</h4>
+                </div>
+            </div>
+        </footer>
+
+    </div>
+
+    <!-- Script para el efecto Matrix -->
+    <script>
+        const canvas = document.getElementById('matrix-canvas');
+        const ctx = canvas.getContext('2d');
+
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        let katakana = 'アァカサタナハマヤャラワガザダバパイィキシチニヒミリヰギジヂビピウゥクスツヌフムユュルグズブヅプエェケセテネヘメレヱゲゼデベペオォコソトノホモヨョロヲゴゾドボポヴッン';
+        let latin = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890';
+        let chars = katakana + latin;
+        chars = chars.split('');
+
+        const fontSize = 16;
+        let columns = Math.floor(canvas.width / fontSize);
+
+        let drops = [];
+        for (let x = 0; x < columns; x++) {
+            drops[x] = 1;
+        }
+
+        function drawMatrix() {
+            ctx.fillStyle = 'rgba(26, 11, 46, 0.05)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            ctx.fillStyle = '#9d00ff'; 
+            ctx.font = fontSize + 'px "Share Tech Mono", monospace';
+
+            for (let i = 0; i < drops.length; i++) {
+                let text = chars[Math.floor(Math.random() * chars.length)];
+                ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+                drops[i]++;
+                if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
+                    drops[i] = 0;
+                }
+            }
+        }
+
+        setInterval(drawMatrix, 40);
+
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            columns = Math.floor(canvas.width / fontSize);
+            drops = [];
+            for (let x = 0; x < columns; x++) {
+                drops[x] = 1;
+            }
+        });
+    </script>
+
+</body>
+</html>
