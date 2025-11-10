@@ -1,15 +1,15 @@
-// Espera a que el DOM esté listo
 document.addEventListener('DOMContentLoaded', () => {
 
-    // --- 1. Lluvia Binaria (Canvas) ---
-    const canvas = document.getElementById('binary-rain');
+    // --- 1. Lluvia de Errores (Canvas Rojo) ---
+    const canvas = document.getElementById('error-rain');
     const ctx = canvas.getContext('2d');
 
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
 
-    let purpleMatrix = "01"; // Puedes agregar más caracteres si quieres
-    purpleMatrix = purpleMatrix.split("");
+    // Caracteres para la lluvia de errores
+    let matrix = "404ERROR"; 
+    matrix = matrix.split("");
 
     const font_size = 14;
     const columns = canvas.width / font_size;
@@ -19,15 +19,16 @@ document.addEventListener('DOMContentLoaded', () => {
         drops[x] = 1;
     }
 
-    function drawBinaryRain() {
+    function drawErrorRain() {
+        // Fondo negro semitransparente para el efecto de desvanecimiento
         ctx.fillStyle = "rgba(0, 0, 0, 0.05)";
         ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-        ctx.fillStyle = "#800080"; // Color Morado
+        ctx.fillStyle = "#f00"; // Color Rojo
         ctx.font = font_size + "px arial";
 
         for (let i = 0; i < drops.length; i++) {
-            const text = purpleMatrix[Math.floor(Math.random() * purpleMatrix.length)];
+            const text = matrix[Math.floor(Math.random() * matrix.length)];
             ctx.fillText(text, i * font_size, drops[i] * font_size);
 
             if (drops[i] * font_size > canvas.height && Math.random() > 0.975) {
@@ -36,7 +37,8 @@ document.addEventListener('DOMContentLoaded', () => {
             drops[i]++;
         }
     }
-    setInterval(drawBinaryRain, 40);
+    // Iniciar la animación
+    setInterval(drawErrorRain, 40);
 
     // --- 2. Lógica de Carga y Modal ---
     const loader = document.getElementById('loader');
@@ -47,18 +49,17 @@ document.addEventListener('DOMContentLoaded', () => {
     const loaderStatus = document.getElementById('loader-status');
 
     // Simulación de carga
-    setTimeout(() => { loaderStatus.textContent = "Accediendo a registros..."; }, 1000);
-    setTimeout(() => { loaderStatus.textContent = "Interfaz lista. Esperando confirmación..."; }, 2500);
+    setTimeout(() => { loaderStatus.textContent = "Accediendo a registros... [AUTH_FAIL]"; }, 1000);
+    setTimeout(() => { loaderStatus.textContent = "Interfaz lista. Esperando confirmación de Usuario..."; }, 2500);
 
     // Cuando la barra de carga termina (3s)
     setTimeout(() => {
-        loader.style.display = 'none'; // Oculta el loader
-        modal.style.display = 'flex'; // Muestra el modal
+        loader.style.display = 'none';
+        modal.style.display = 'flex';
     }, 3000);
 
     // Habilitar botón al hacer scroll
     terminosTexto.addEventListener('scroll', () => {
-        // Comprueba si el usuario llegó al final (con un margen de 10px)
         if (terminosTexto.scrollTop + terminosTexto.clientHeight >= terminosTexto.scrollHeight - 10) {
             btnAceptar.disabled = false;
         }
@@ -68,16 +69,19 @@ document.addEventListener('DOMContentLoaded', () => {
     btnAceptar.addEventListener('click', () => {
         modal.style.display = 'none';
         mainContent.style.display = 'block';
-        document.body.classList.add('loaded'); // Permite el scroll en el body
+        document.body.classList.add('loaded');
     });
 
-    // --- 3. Rotador de Citas ---
+    // --- 3. Rotador de Citas (Más citas) ---
     const citas = [
         "La curiosidad es el motor del hacker ético. La ética es su brújula.",
         "Piensa defensivamente. Actúa éticamente.",
         "No hay seguridad absoluta, solo grados de inseguridad.",
         "Un sistema solo es tan fuerte como su eslabón más débil.",
-        "El conocimiento es poder, pero el carácter es respeto."
+        "El conocimiento es poder, pero el carácter es respeto.",
+        "Para construir un muro, debes saber cómo piensa el que quiere derribarlo.",
+        "La mejor defensa es una buena... auditoría.",
+        "No rompas cosas. Rómpelas en un entorno de prueba y luego arréglalas."
     ];
     let citaIndex = 0;
     const citaElemento = document.getElementById('cita-texto');
@@ -87,23 +91,21 @@ document.addEventListener('DOMContentLoaded', () => {
         citaElemento.textContent = `"${citas[citaIndex]}"`;
     }, 5000); // Cambia la cita cada 5 segundos
 
-    // --- 4. Mini-Secreto (Puzzle) ---
+    // --- 4. Mini-Secreto (Puzzle Hexadecimal) ---
     const btnPuzzle = document.getElementById('btn-puzzle');
     const puzzleResult = document.getElementById('puzzle-result');
 
     btnPuzzle.addEventListener('click', () => {
-        const respuesta = prompt("Descifra el código: 'UHJvdG9jb2xvTGV2aWF0aGFt'\n(Pista: Es un formato de codificación común)");
+        const respuesta = prompt("Decodifica el fragmento (Hex a ASCII): \n4c 65 76 69 61 74 68 61 6d");
         
-        // La respuesta es "ProtocoloLeviatham" (Base64)
-        if (respuesta && respuesta.toLowerCase() === "protocololeviatham") {
-            puzzleResult.textContent = "[+] Acertijo resuelto. (1/3 Completado)";
-            puzzleResult.style.color = "#0f0";
+        // La respuesta es "Leviatham"
+        if (respuesta && respuesta.toLowerCase() === "leviatham") {
+            puzzleResult.textContent = "[+] Decodificación correcta. (1/3 Completado)";
+            puzzleResult.style.color = "#f00"; // Rojo
         } else {
-            puzzleResult.textContent = "[-] Intento fallido. Sigue intentando.";
-            puzzleResult.style.color = "red";
+            puzzleResult.textContent = "[-] Fallo en la decodificación. Intento nulo.";
+            puzzleResult.style.color = "#888"; // Gris
         }
     });
 
 });
-
-
