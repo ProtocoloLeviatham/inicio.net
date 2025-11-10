@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Protocolo Leviatham - Inicio</title>
-    <link rel="icon" type="image/png" href="favicon.png">
     <style>
         /* --- ESTILOS GENERALES Y RESET --- */
         body, html {
@@ -14,7 +13,7 @@
             height: 100%;
             font-family: 'Courier New', Courier, monospace;
             color: #eee;
-            background-color: #0a0a0a;
+            background-color: #000; /* Fondo negro puro */
             overflow: hidden; /* Deshabilitar scroll al inicio */
         }
 
@@ -26,7 +25,7 @@
             width: 100%;
             height: 100%;
             z-index: -1;
-            background-color: #000;
+            background-color: #000; /* Fondo del canvas negro puro */
         }
 
         /* --- PANTALLA DE CARGA --- */
@@ -70,16 +69,16 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.9);
+            background: rgba(0, 0, 0, 0.95);
             z-index: 90;
-            display: none; /* Oculto por defecto */
+            display: none;
             justify-content: center;
             align-items: center;
             padding: 20px;
             box-sizing: border-box;
         }
         #modal-content {
-            background: #0a0a0a;
+            background: #000; /* Fondo negro */
             border: 2px solid #90f;
             width: 90%;
             max-width: 800px;
@@ -95,20 +94,16 @@
             padding-bottom: 10px;
         }
         #terminos-texto {
-            height: 400px; /* Tamaño grande como pediste */
+            height: 400px;
             overflow-y: scroll;
             border: 1px dashed #555;
             padding: 15px;
             margin-bottom: 20px;
-            background: #050505;
+            background: #111; /* Fondo del texto ligeramente gris */
             color: #ccc;
         }
-        #terminos-texto p {
-            margin-bottom: 15px;
-        }
-        #terminos-texto strong {
-            color: #f00; /* Rojo para énfasis */
-        }
+        #terminos-texto p { margin-bottom: 15px; }
+        #terminos-texto strong { color: #f00; }
         #btn-aceptar {
             padding: 15px;
             font-size: 1.1em;
@@ -141,10 +136,7 @@
         }
 
         /* --- HEADER Y MENÚ --- */
-        header {
-            text-align: center;
-            margin-bottom: 30px;
-        }
+        header { text-align: center; margin-bottom: 30px; }
         h1 {
             font-size: 3em;
             color: #eee;
@@ -169,18 +161,20 @@
             font-size: 1em;
             font-weight: bold;
             text-transform: uppercase;
-            transition: all 0.3s ease;
+            transition: all 0.3s ease-in-out; /* Transición mejorada */
             box-shadow: 0 0 5px #90f;
         }
         .nav-button:hover {
             background-color: #90f;
             color: #000;
-            box-shadow: 0 0 15px #90f, 0 0 25px #90f;
+            /* Efecto "pop" mejorado */
+            transform: translateY(-3px) scale(1.05); 
+            box-shadow: 0 0 15px #90f, 0 0 30px #90f, 0 0 45px #90f;
         }
 
         /* --- CONTENIDO DE INICIO --- */
         .content-section {
-            background: rgba(10, 10, 10, 0.8);
+            background: rgba(0, 0, 0, 0.85); /* Fondo negro semi-transparente */
             border: 1px solid #333;
             padding: 20px;
             margin-bottom: 25px;
@@ -200,16 +194,12 @@
             animation: fire-effect 1.5s infinite alternate;
         }
 
-        /* Animación de FUEGO (resplandor) */
         @keyframes fire-effect {
             0% { text-shadow: 0 0 5px #fff, 0 0 10px #fff, 0 0 15px #ff0000, 0 0 20px #ff0000; }
             100% { text-shadow: 0 0 10px #fff, 0 0 20px #ff4500, 0 0 30px #ff4500, 0 0 40px #ff4500; }
         }
 
-        .texto-rojo {
-            color: #f00;
-            font-weight: bold;
-        }
+        .texto-rojo { color: #f00; font-weight: bold; }
 
         #cita-codigo {
             font-style: italic;
@@ -218,15 +208,10 @@
             padding-left: 15px;
             color: #ccc;
         }
-        #cita-codigo p {
-            margin: 0;
-        }
+        #cita-codigo p { margin: 0; }
 
         /* --- PUZZLE --- */
-        #puzzle {
-            border: 1px dashed #555;
-            padding: 15px;
-        }
+        #puzzle { border: 1px dashed #555; padding: 15px; }
         #puzzle input {
             background: #111;
             border: 1px solid #555;
@@ -241,9 +226,72 @@
             padding: 8px;
             cursor: pointer;
         }
-        #puzzle-result {
-            margin-top: 10px;
-            color: #0f0; /* Verde para éxito */
+        #puzzle-result { margin-top: 10px; color: #0f0; }
+
+        /* --- NUEVO: BOTONES ESPECIALES (ROJOS) --- */
+        #colaboradores h3 {
+            text-align: center;
+            color: #f00;
+            text-transform: uppercase;
+        }
+        .special-buttons-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        .special-button {
+            padding: 10px 20px;
+            background-color: transparent;
+            border: 2px solid #f00;
+            color: #f00;
+            text-decoration: none;
+            font-size: 1em;
+            font-weight: bold;
+            text-transform: uppercase;
+            transition: all 0.3s ease;
+            /* Animación de parpadeo */
+            animation: blink-red 2s infinite linear;
+        }
+        .special-button:hover {
+            background-color: #f00;
+            color: #000;
+            animation: none; /* Pausar el parpadeo al pasar el mouse */
+            box-shadow: 0 0 15px #f00, 0 0 30px #f00;
+        }
+
+        /* Keyframe para el parpadeo rojo */
+        @keyframes blink-red {
+            0%, 100% { 
+                box-shadow: 0 0 5px #f00, 0 0 10px #f00 inset;
+                color: #f00;
+            }
+            50% { 
+                box-shadow: 0 0 20px #f00, 0 0 30px #f00, 0 0 40px #f00, 0 0 10px #f00 inset;
+                color: #fff; /* El texto se ilumina a blanco */
+            }
+        }
+        
+        /* --- NUEVO: FOOTER --- */
+        footer {
+            text-align: center;
+            padding: 20px;
+            margin-top: 40px;
+            border-top: 1px solid #555;
+            color: #777;
+            font-size: 0.9em;
+        }
+        footer p {
+            margin: 5px 0;
+        }
+        footer a {
+            color: #90f;
+            text-decoration: none;
+            cursor: pointer;
+        }
+        footer a:hover {
+            text-decoration: underline;
         }
 
     </style>
@@ -264,37 +312,23 @@
         <div id="modal-content">
             <h2>TÉRMINOS Y CONDICIONES DE USO</h2>
             <div id="terminos-texto" onscroll="checkScroll(this)">
-                <p>Bienvenido a Protocolo Leviatham. Antes de acceder a nuestra comunidad y herramientas, es imperativo que comprendas y aceptes las siguientes reglas. El acceso está condicionado a tu aceptación de estos términos.</p>
-                
+                <p>Bienvenido a Protocolo Leviatham...</p>
                 <h3>1. PROPÓSITO ESTRICTAMENTE EDUCATIVO Y ÉTICO</h3>
-                <p>Todo el contenido, herramientas, códigos y discusiones en esta plataforma (FORO, COMUNIDAD, HERRAMIENTAS, CODIGOS, SOPORTE) se proporcionan con un propósito <strong>única y exclusivamente educativo y defensivo</strong> (Hacking Ético / White Hat). El objetivo es formar a profesionales de la seguridad, investigadores y entusiastas en la identificación y mitigación de vulnerabilidades para proteger sistemas, no para atacarlos.</p>
-
+                <p>Todo el contenido...</p>
                 <h3>2. PROHIBICIÓN DE ACTIVIDAD ILEGAL</h3>
-                <p>Se prohíbe terminantemente el uso de la información o herramientas aquí obtenidas para cualquier actividad maliciosa, destructiva o ilegal. Esto incluye, pero no se limita a:</p>
-                <ul>
-                    <li>Intentos de acceso no autorizado a sistemas, redes o datos (hacking).</li>
-                    <li>Creación o distribución de malware, ransomware, virus o cualquier software malintencionado.</li>
-                    <li>Ataques de denegación de servicio (DoS/DDoS).</li>
-                    <li>Suplantación de identidad (phishing) o fraude.</li>
-                    <li>Explotación de vulnerabilidades en sistemas públicos o privados sin autorización explícita y por escrito del propietario (Bug Bounty o Pentesting autorizado).</li>
-                </ul>
-
+                <p>Se prohíbe terminantemente...</p>
                 <h3>3. MARCO LEGAL (ARGENTINA)</h3>
-                <p>Al aceptar estos términos, reconoces estar al tanto de la legislación vigente sobre delitos informáticos en tu jurisdicción. En Argentina, esto incluye la <strong>Ley 26.388 de Delitos Informáticos</strong>, que modifica el Código Penal y sanciona conductas como:</p>
+                <p>Al aceptar estos términos...</p>
                 <ul>
-                    <li><strong>Art. 153 BIS:</strong> Acceso ilegítimo a un sistema o dato informático de acceso restringido.</li>
-                    <li><strong>Art. 157 BIS:</strong> Interceptación o captura indebida de comunicaciones o datos.</li>
-                    <li><strong>Art. 183:</strong> Daño o alteración de datos (Daño informático).</li>
+                    <li><strong>Art. 153 BIS:</strong> Acceso ilegítimo...</li>
+                    <li><strong>Art. 157 BIS:</strong> Interceptación...</li>
+                    <li><strong>Art. 183:</strong> Daño o alteración de datos...</li>
                 </ul>
-                <p>El desconocimiento de la ley no exime de responsabilidad. Cualquier actividad que infrinja estas y otras leyes aplicables será considerada una violación grave de estos términos.</p>
-
                 <h3>4. DESLINDE DE RESPONSABILIDAD</h3>
-                <p><strong>Protocolo Leviatham y sus administradores NO se hacen responsables bajo ninguna circunstancia del mal uso que cualquier individuo pueda dar a la información, conocimientos o herramientas compartidas en esta comunidad.</strong></p>
-                <p>El usuario es el único responsable de sus acciones. Si utilizas lo aprendido aquí para cometer actos ilícitos, serás el único responsable legal y penal de tus actos ante las autoridades pertinentes. Esta comunidad no aprueba, no apoya y no participará en actividades ilegales.</p>
-
+                <p><strong>Protocolo Leviatham y sus administradores NO se hacen responsables...</strong></p>
                 <h3>5. NORMAS DE LA COMUNIDAD</h3>
-                <p>Nos esforzamos por mantener un ambiente sano y colaborativo. La toxicidad, el ego desmedido, el secretismo malintencionado y la falta de respeto no serán tolerados. La colaboración y el aprendizaje mutuo son nuestros pilares.</p>
-                <p>Al hacer scroll y aceptar, declaras haber leído, entendido y aceptado en su totalidad estos términos. Te comprometes a usar esta plataforma de manera ética, responsable y siempre dentro del marco de la ley. Si no estás de acuerdo, por favor, cierra esta página inmediatamente.</p>
+                <p>Nos esforzamos por mantener un ambiente sano...</p>
+                <p>Al hacer scroll y aceptar, declaras haber leído...</p>
             </div>
             <button id="btn-aceptar" disabled>He leído y acepto los Términos y Condiciones</button>
         </div>
@@ -321,21 +355,6 @@
             <div class="content-section">
                 <h2 class="fire-title">¿Qué es el Protocolo Leviatham?</h2>
                 <p>El Protocolo Leviatham no es solo un sitio web; es un compromiso.</p>
-                <p>Es el principio de que la seguridad informática y el hacking pueden y deben ser fuerzas para el bien.</p>
-                <p>En un mundo donde el término "hacker" ha sido distorsionado, nosotros lo reivindicamos.</p>
-                <p>"Leviatham" representa la inmensidad del sistema digital: colosal, complejo e interconectado.</p>
-                <p>Nuestro "Protocolo" es la metodología ética que usamos para navegarlo y protegerlo.</p>
-                <p>Esta plataforma fue fundada con un objetivo principal: crear la comunidad de Hacking Ético (White Hat) más saludable y constructiva de la red.</p>
-                
-                <h3>Un Refugio Sano</h3>
-                <p>Estamos cansados de la toxicidad, el secretismo y el ego que plagan muchas esferas de la seguridad. Aquí, la colaboración reemplaza a la competencia destructiva, y la pregunta es bienvenida.</p>
-                
-                <h3>Conocimiento Defensivo</h3>
-                <p>Creemos que la mejor defensa se construye entendiendo la ofensiva. Compartimos herramientas, códigos y tácticas con un propósito estrictamente educativo y defensivo.</p>
-                
-                <h3>Ética Inquebrantable</h3>
-                <p>Operamos bajo un código de conducta riguroso. Exploramos vulnerabilidades para repararlas, no para explotarlas.</p>
-                
                 <p class="texto-rojo">Protocolo Leviatham es tu arsenal, tu laboratorio y tu equipo. Eres bienvenido, siempre que tu sombrero sea blanco.</p>
             </div>
 
@@ -354,9 +373,27 @@
                 <button id="puzzle-btn">Verificar</button>
                 <div id="puzzle-result"></div>
             </div>
+
+            <div class="content-section" id="colaboradores">
+                <h3><// Comunidades Colaboradoras ></h3>
+                <div class="special-buttons-container">
+                    <a href="#" class="special-button">System404</a>
+                    <a href="#" class="special-button">Lazarus</a>
+                    <a href="#" class="special-button">Team Virus</a>
+                </div>
+            </div>
         </main>
+
+        <footer>
+            <p>&copy; 2025 Protocolo Leviatham. Todos los derechos reservados.</p>
+            <p>Comunidades colaboradoras: System404 | Industrias Lazarus | Team Virus</p>
+            <p>El uso de este sitio implica la aceptación de nuestros <a id="revisar-terminos">Términos y Condiciones</a>.</p>
+        </footer>
+
     </div>
 
     <script src="script.js"></script>
 </body>
 </html>
+
+
