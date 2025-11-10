@@ -4,390 +4,123 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Protocolo Leviatham - Inicio</title>
-    <style>
-        /* --- ESTILOS GENERALES Y RESET --- */
-        body, html {
-            margin: 0;
-            padding: 0;
-            width: 100%;
-            height: 100%;
-            font-family: 'Courier New', Courier, monospace;
-            color: #eee;
-            background-color: #000; /* Fondo negro puro */
-            overflow: hidden; /* Deshabilitar scroll al inicio */
-        }
-
-        /* --- FONDO DE LLUVIA BINARIA --- */
-        #matrix-canvas {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: -1;
-            background-color: #000; /* Fondo del canvas negro puro */
-        }
-
-        /* --- PANTALLA DE CARGA --- */
-        #loading-screen {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: #000;
-            z-index: 100;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            color: #90f; /* Morado */
-        }
-        #loading-text {
-            font-size: 1.2em;
-            text-shadow: 0 0 5px #90f;
-            margin-bottom: 20px;
-        }
-        #progress-bar-container {
-            width: 60%;
-            max-width: 400px;
-            border: 1px solid #90f;
-            padding: 3px;
-        }
-        #progress-bar {
-            width: 0%;
-            height: 20px;
-            background: #90f;
-            box-shadow: 0 0 10px #90f, 0 0 20px #90f;
-            transition: width 0.1s linear;
-        }
-
-        /* --- MODAL DE TÉRMINOS Y CONDICIONES --- */
-        #modal-terminos {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.95);
-            z-index: 90;
-            display: none;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
-            box-sizing: border-box;
-        }
-        #modal-content {
-            background: #000; /* Fondo negro */
-            border: 2px solid #90f;
-            width: 90%;
-            max-width: 800px;
-            padding: 25px;
-            box-shadow: 0 0 20px #90f;
-            display: flex;
-            flex-direction: column;
-        }
-        #modal-content h2 {
-            color: #90f;
-            text-align: center;
-            border-bottom: 1px solid #90f;
-            padding-bottom: 10px;
-        }
-        #terminos-texto {
-            height: 400px;
-            overflow-y: scroll;
-            border: 1px dashed #555;
-            padding: 15px;
-            margin-bottom: 20px;
-            background: #111; /* Fondo del texto ligeramente gris */
-            color: #ccc;
-        }
-        #terminos-texto p { margin-bottom: 15px; }
-        #terminos-texto strong { color: #f00; }
-        #btn-aceptar {
-            padding: 15px;
-            font-size: 1.1em;
-            font-family: 'Courier New', Courier, monospace;
-            cursor: pointer;
-            border: none;
-            transition: background-color 0.3s, color 0.3s;
-        }
-        #btn-aceptar:disabled {
-            background: #333;
-            color: #666;
-            cursor: not-allowed;
-            border: 1px solid #444;
-        }
-        #btn-aceptar:enabled {
-            background: #90f;
-            color: #fff;
-            border: 1px solid #fff;
-            box-shadow: 0 0 15px #90f;
-        }
-
-        /* --- CONTENIDO PRINCIPAL --- */
-        #main-content {
-            display: none; /* Oculto por defecto */
-            position: relative;
-            z-index: 10;
-            padding: 20px;
-            max-width: 1000px;
-            margin: 0 auto;
-        }
-
-        /* --- HEADER Y MENÚ --- */
-        header { text-align: center; margin-bottom: 30px; }
-        h1 {
-            font-size: 3em;
-            color: #eee;
-            text-shadow: 0 0 10px #90f, 0 0 20px #90f;
-            margin: 0;
-        }
-        
-        nav {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 10px;
-            margin-bottom: 40px;
-        }
-        .nav-button {
-            display: inline-block;
-            padding: 12px 25px;
-            background-color: transparent;
-            border: 2px solid #90f;
-            color: #90f;
-            text-decoration: none;
-            font-size: 1em;
-            font-weight: bold;
-            text-transform: uppercase;
-            transition: all 0.3s ease-in-out; /* Transición mejorada */
-            box-shadow: 0 0 5px #90f;
-        }
-        .nav-button:hover {
-            background-color: #90f;
-            color: #000;
-            /* Efecto "pop" mejorado */
-            transform: translateY(-3px) scale(1.05); 
-            box-shadow: 0 0 15px #90f, 0 0 30px #90f, 0 0 45px #90f;
-        }
-
-        /* --- CONTENIDO DE INICIO --- */
-        .content-section {
-            background: rgba(0, 0, 0, 0.85); /* Fondo negro semi-transparente */
-            border: 1px solid #333;
-            padding: 20px;
-            margin-bottom: 25px;
-        }
-        
-        .warning-box {
-            border: 1px dashed #f00;
-            padding: 10px;
-            text-align: center;
-            color: #f00;
-        }
-
-        .fire-title {
-            font-size: 2.5em;
-            color: #f00;
-            text-align: center;
-            animation: fire-effect 1.5s infinite alternate;
-        }
-
-        @keyframes fire-effect {
-            0% { text-shadow: 0 0 5px #fff, 0 0 10px #fff, 0 0 15px #ff0000, 0 0 20px #ff0000; }
-            100% { text-shadow: 0 0 10px #fff, 0 0 20px #ff4500, 0 0 30px #ff4500, 0 0 40px #ff4500; }
-        }
-
-        .texto-rojo { color: #f00; font-weight: bold; }
-
-        #cita-codigo {
-            font-style: italic;
-            font-size: 1.1em;
-            border-left: 3px solid #90f;
-            padding-left: 15px;
-            color: #ccc;
-        }
-        #cita-codigo p { margin: 0; }
-
-        /* --- PUZZLE --- */
-        #puzzle { border: 1px dashed #555; padding: 15px; }
-        #puzzle input {
-            background: #111;
-            border: 1px solid #555;
-            color: #eee;
-            padding: 8px;
-            font-family: 'Courier New', Courier, monospace;
-        }
-        #puzzle button {
-            background: #555;
-            border: 1px solid #888;
-            color: #eee;
-            padding: 8px;
-            cursor: pointer;
-        }
-        #puzzle-result { margin-top: 10px; color: #0f0; }
-
-        /* --- NUEVO: BOTONES ESPECIALES (ROJOS) --- */
-        #colaboradores h3 {
-            text-align: center;
-            color: #f00;
-            text-transform: uppercase;
-        }
-        .special-buttons-container {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 15px;
-            margin-top: 20px;
-        }
-        .special-button {
-            padding: 10px 20px;
-            background-color: transparent;
-            border: 2px solid #f00;
-            color: #f00;
-            text-decoration: none;
-            font-size: 1em;
-            font-weight: bold;
-            text-transform: uppercase;
-            transition: all 0.3s ease;
-            /* Animación de parpadeo */
-            animation: blink-red 2s infinite linear;
-        }
-        .special-button:hover {
-            background-color: #f00;
-            color: #000;
-            animation: none; /* Pausar el parpadeo al pasar el mouse */
-            box-shadow: 0 0 15px #f00, 0 0 30px #f00;
-        }
-
-        /* Keyframe para el parpadeo rojo */
-        @keyframes blink-red {
-            0%, 100% { 
-                box-shadow: 0 0 5px #f00, 0 0 10px #f00 inset;
-                color: #f00;
-            }
-            50% { 
-                box-shadow: 0 0 20px #f00, 0 0 30px #f00, 0 0 40px #f00, 0 0 10px #f00 inset;
-                color: #fff; /* El texto se ilumina a blanco */
-            }
-        }
-        
-        /* --- NUEVO: FOOTER --- */
-        footer {
-            text-align: center;
-            padding: 20px;
-            margin-top: 40px;
-            border-top: 1px solid #555;
-            color: #777;
-            font-size: 0.9em;
-        }
-        footer p {
-            margin: 5px 0;
-        }
-        footer a {
-            color: #90f;
-            text-decoration: none;
-            cursor: pointer;
-        }
-        footer a:hover {
-            text-decoration: underline;
-        }
-
-    </style>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
+    <canvas id="binary-rain"></canvas>
 
-    <canvas id="matrix-canvas"></canvas>
-
-    <div id="loading-screen">
-        <div id="loading-text">INICIANDO PROTOCOLO LEVIATHAM...</div>
-        <div id="progress-bar-container">
-            <div id="progress-bar"></div>
+    <div id="loader">
+        <div class="loader-content">
+            <h3>[INICIANDO PROTOCOLO DE SEGURIDAD...]</h3>
+            <p>Verificando integridad del sistema...</p>
+            <div class="progress-bar">
+                <div class="progress"></div>
+            </div>
+            <p id="loader-status">Cargando Módulos...</p>
         </div>
-        <div id="loading-status" style="margin-top: 10px;">Cargando interfaz segura...</div>
     </div>
 
     <div id="modal-terminos">
-        <div id="modal-content">
-            <h2>TÉRMINOS Y CONDICIONES DE USO</h2>
-            <div id="terminos-texto" onscroll="checkScroll(this)">
-                <p>Bienvenido a Protocolo Leviatham...</p>
-                <h3>1. PROPÓSITO ESTRICTAMENTE EDUCATIVO Y ÉTICO</h3>
-                <p>Todo el contenido...</p>
-                <h3>2. PROHIBICIÓN DE ACTIVIDAD ILEGAL</h3>
-                <p>Se prohíbe terminantemente...</p>
-                <h3>3. MARCO LEGAL (ARGENTINA)</h3>
-                <p>Al aceptar estos términos...</p>
+        <div class="modal-content">
+            <h2>TÉRMINOS Y CONDICIONES DE USO - PROTOCOLO LEVIATHAM</h2>
+            
+            <div class="terminos-content" id="terminos-texto">
+                <p>Bienvenido a Protocolo Leviatham. Al acceder y utilizar este sitio web, usted acepta cumplir y estar sujeto a los siguientes términos y condiciones de uso.</p>
+                <p><strong>Lea estos términos detenidamente antes de continuar.</strong></p>
+                
+                <h3>1. Objeto y Naturaleza Ética</h3>
+                <p>Protocolo Leviatham es una comunidad dedicada exclusivamente al **Hacking Ético (White Hat)** y la ciberseguridad defensiva. Todo el contenido, herramientas y códigos proporcionados en este sitio tienen un propósito estrictamente **educativo y de investigación**.</p>
+                
+                <h3>2. Deslinde de Responsabilidad</h3>
+                <p>Los administradores y la comunidad de Protocolo Leviatham **no se hacen responsables** bajo ninguna circunstancia del mal uso que se le pueda dar a la información, herramientas o conocimientos adquiridos en este sitio. El usuario es el único responsable de sus acciones. La utilización de cualquier técnica para fines ilegales, maliciosos o no autorizados va en contra de los principios de esta comunidad.</p>
+
+                <h3>3. Prohibiciones y Cumplimiento Legal (Argentina)</h3>
+                <p>El uso de este sitio para actividades ilícitas está estrictamente prohibido. Usted se compromete a no utilizar la información aquí presente para infringir la legislación argentina, incluyendo, pero no limitándose a:</p>
                 <ul>
-                    <li><strong>Art. 153 BIS:</strong> Acceso ilegítimo...</li>
-                    <li><strong>Art. 157 BIS:</strong> Interceptación...</li>
-                    <li><strong>Art. 183:</strong> Daño o alteración de datos...</li>
+                    <li><strong>Acceso no autorizado:</strong> Intentar acceder a sistemas informáticos, redes o datos sin el consentimiento explícito del propietario (Violación del Art. 153 bis del Código Penal, Ley 26.388).</li>
+                    <li><strong>Daño informático:</strong> Alterar, destruir o inutilizar datos, documentos o sistemas (Sabotaje informático, Art. 183 y 184 del Código Penal).</li>
+                    <li><strong>Fraude informático:</strong> Manipular sistemas para obtener un beneficio ilícito (Art. 173, inc. 16).</li>
+                    <li><strong>Violación de datos personales:</strong> Acceder, revelar o utilizar datos personales sin autorización (Ley 25.326 de Protección de Datos Personales).</li>
+                    <li><strong>Grooming y otros delitos:</strong> Queda terminantemente prohibida cualquier actividad relacionada con el ciberacoso o delitos contra la integridad (Ley 26.904).</li>
                 </ul>
-                <h3>4. DESLINDE DE RESPONSABILIDAD</h3>
-                <p><strong>Protocolo Leviatham y sus administradores NO se hacen responsables...</strong></p>
-                <h3>5. NORMAS DE LA COMUNIDAD</h3>
-                <p>Nos esforzamos por mantener un ambiente sano...</p>
-                <p>Al hacer scroll y aceptar, declaras haber leído...</p>
+                <p>La infracción de estas leyes conlleva severas sanciones penales. Esta comunidad promueve la denuncia de vulnerabilidades, no su explotación.</p>
+
+                <h3>4. Código de Conducta de la Comunidad</h3>
+                <p>El respeto, la colaboración y la curiosidad ética son los pilares de esta comunidad. No se tolerará la toxicidad, el elitismo, el secretismo malintencionado ni la promoción de actividades "Black Hat" o "Grey Hat".</p>
+                
+                <h3>5. Aceptación</h3>
+                <p>Al hacer clic en "Aceptar", usted declara haber leído, entendido y aceptado la totalidad de estos términos. Confirma que utilizará los recursos de Protocolo Leviatham de manera responsable, legal y ética. Si no está de acuerdo, debe abandonar el sitio inmediatamente.</p>
+                <p><strong>Usted debe desplazarse hasta el final de este documento para poder aceptar.</strong></p>
+                <p>...</p>
+                <p>...</p>
+                <p>...</p>
+                <p>Fin del documento.</p>
             </div>
-            <button id="btn-aceptar" disabled>He leído y acepto los Términos y Condiciones</button>
+            
+            <button id="btn-aceptar" disabled>ACEPTAR TÉRMINOS</button>
         </div>
     </div>
 
-    <div id="main-content">
+    <div id="main-content" style="display: none;">
+        
         <header>
             <h1>PROTOCOLO LEVIATHAM</h1>
             <nav>
-                <a href="https://protocololeviatham.github.io/foro.net/" class="nav-button">FORO</a>
-                <a href="https://protocololeviatham.github.io/comunidad.net/" class="nav-button">COMUNIDAD</a>
-                <a href="https://protocololeviatham.github.io/herramientas.net/" class="nav-button">HERRAMIENTAS</a>
-                <a href="https://protocololeviatham.github.io/codigos.net/" class="nav-button">CODIGOS</a>
-                <a href="https://protocololeviatham.github.io/soporte.net-/" class="nav-button">SOPORTE</a>
+                <ul>
+                    <li><a href="https://protocololeviatham.github.io/foro.net/" class="btn-menu">FORO</a></li>
+                    <li><a href="https://protocololeviatham.github.io/comunidad.net/" class="btn-menu">COMUNIDAD</a></li>
+                    <li><a href="https://protocololeviatham.github.io/herramientas.net/" class="btn-menu">HERRAMIENTAS</a></li>
+                    <li><a href="https://protocololeviatham.github.io/codigos.net/" class="btn-menu">CODIGO</a></li>
+                    <li><a href="https://protocololeviatham.github.io/soporte.net-/" class="btn-menu">SOPORTE</a></li>
+                </ul>
             </nav>
         </header>
 
         <main>
-            <div class="content-section warning-box">
-                
-                <p>Para mejorar la experiencia de su uso y navegación, cambie al modo "sitio para computadora" en su navegador móvil.</p>
+            <div class="mobile-warning">
+                <p>&#91;i&#93; Para mejorar su experiencia, cambie a "Sitio para computadora" en su navegador.</p>
             </div>
 
-            <div class="content-section">
-                <h2 class="fire-title">¿Qué es el Protocolo Leviatham?</h2>
+            <section class="intro">
+                <h2 class="fire-text">¿Qué es el Protocolo Leviatham?</h2>
                 <p>El Protocolo Leviatham no es solo un sitio web; es un compromiso.</p>
-                <p class="texto-rojo">Protocolo Leviatham es tu arsenal, tu laboratorio y tu equipo. Eres bienvenido, siempre que tu sombrero sea blanco.</p>
-            </div>
+                <p>Es el principio de que la seguridad informática y el hacking pueden y deben ser fuerzas para el bien.</p>
+                <p>En un mundo donde el término "hacker" ha sido distorsionado, nosotros lo reivindicamos.</p>
+                <p>"Leviatham" representa la inmensidad del sistema digital: colosal, complejo e interconectado.</p>
+                <p>Nuestro "Protocolo" es la metodología ética que usamos para navegarlo y protegerlo.</p>
+                <p>Esta plataforma fue fundada con un objetivo principal: crear la comunidad de Hacking Ético (White Hat) más saludable y constructiva de la red.</p>
+                <br>
+                <p><strong>Un Refugio Sano:</strong> Estamos cansados de la toxicidad, el secretismo y el ego que plagan muchas esferas de la seguridad. Aquí, la colaboración reemplaza a la competencia destructiva, y la pregunta es bienvenida.</p>
+                <p><strong>Conocimiento Defensivo:</strong> Creemos que la mejor defensa se construye entendiendo la ofensiva. Compartimos herramientas, códigos y tácticas con un propósito estrictamente educativo y defensivo.</p>
+                <p><strong>Ética Inquebrantable:</strong> Operamos bajo un código de conducta riguroso. Exploramos vulnerabilidades para repararlas, no para explotarlas.</p>
+                <p class="red-text">Protocolo Leviatham es tu arsenal, tu laboratorio y tu equipo. Eres bienvenido, siempre que tu sombrero sea blanco.</p>
+            </section>
 
-            <div class="content-section">
-                <h3>Módulo de "Cita del Código"</h3>
-                <div id="cita-codigo">
-                    <p>"La curiosidad es el motor del hacker, pero la ética es su brújula."</p>
-                </div>
-            </div>
+            <section class="quote-module">
+                <h3>Cita del Código</h3>
+                <p id="cita-texto">"La curiosidad es el motor del hacker ético. La ética es su brújula."</p>
+            </section>
 
-            <div class="content-section" id="puzzle">
-                <h3>Minisecreto: Desafío de Acceso</h3>
-                <p>Responde la pregunta para verificar tu intención:</p>
-                <label for="puzzle-input">¿Cuál es el objetivo principal de un 'White Hat'? </label>
-                <input type="text" id="puzzle-input" placeholder="Tu respuesta...">
-                <button id="puzzle-btn">Verificar</button>
-                <div id="puzzle-result"></div>
-            </div>
+            <section class="puzzle">
+                <h3>Mini-Secreto</h3>
+                <p>Un simple test de conocimiento. "UHJvdG9jb2xvTGV2aWF0aGFt"</p>
+                <button id="btn-puzzle">Resolver el Acertijo</button>
+                <p id="puzzle-result"></p>
+            </section>
 
-            <div class="content-section" id="colaboradores">
-                <h3><// Comunidades Colaboradoras ></h3>
-                <div class="special-buttons-container">
-                    <a href="#" class="special-button">System404</a>
-                    <a href="#" class="special-button">Lazarus</a>
-                    <a href="#" class="special-button">Team Virus</a>
-                </div>
-            </div>
         </main>
 
         <footer>
-            <p>&copy; 2025 Protocolo Leviatham. Todos los derechos reservados.</p>
-            <p>Comunidades colaboradoras: System404 | Industrias Lazarus | Team Virus</p>
-            <p>El uso de este sitio implica la aceptación de nuestros <a id="revisar-terminos">Términos y Condiciones</a>.</p>
+            <div class="special-buttons">
+                <h3>Comunidades Colaboradoras</h3>
+                <button class="btn-flash red">System404</button>
+                <button class="btn-flash red">Lazarus</button>
+                <button class="btn-flash red">Team Virus</button>
+            </div>
+            <div class="footer-legal">
+                <p>© 2025 Protocolo Leviatham. Todos los derechos reservados.</p>
+                <p>Industrias Lazarus | Términos de Servicio | Política de Privacidad</p>
+            </div>
         </footer>
 
     </div>
@@ -395,5 +128,3 @@
     <script src="script.js"></script>
 </body>
 </html>
-
-
