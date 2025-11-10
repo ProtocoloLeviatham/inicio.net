@@ -1,142 +1,107 @@
-// --- EJECUTAR CUANDO EL DOM ESTÉ LISTO ---
+// Espera a que el DOM esté listo
 document.addEventListener('DOMContentLoaded', () => {
 
-    // --- LÓGICA DE LLUVIA BINARIA MORADA ---
-    const canvas = document.getElementById('matrix-canvas');
+    // --- 1. Lluvia Binaria (Canvas) ---
+    const canvas = document.getElementById('binary-rain');
     const ctx = canvas.getContext('2d');
 
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
 
-    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%^&*()';
-    const fontSize = 16;
-    const columns = canvas.width / fontSize;
+    let purpleMatrix = "01"; // Puedes agregar más caracteres si quieres
+    purpleMatrix = purpleMatrix.split("");
+
+    const font_size = 14;
+    const columns = canvas.width / font_size;
     const drops = [];
 
     for (let x = 0; x < columns; x++) {
         drops[x] = 1;
     }
 
-    function drawMatrix() {
-        // Fondo semi-transparente para crear el efecto de "estela"
-        ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+    function drawBinaryRain() {
+        ctx.fillStyle = "rgba(0, 0, 0, 0.05)";
         ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-        ctx.fillStyle = '#90f'; // Color morado
-        ctx.font = fontSize + 'px monospace';
+        ctx.fillStyle = "#800080"; // Color Morado
+        ctx.font = font_size + "px arial";
 
         for (let i = 0; i < drops.length; i++) {
-            const text = chars[Math.floor(Math.random() * chars.length)];
-            ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+            const text = purpleMatrix[Math.floor(Math.random() * purpleMatrix.length)];
+            ctx.fillText(text, i * font_size, drops[i] * font_size);
 
-            // Reiniciar la gota aleatoriamente o si se sale de la pantalla
-            if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
+            if (drops[i] * font_size > canvas.height && Math.random() > 0.975) {
                 drops[i] = 0;
             }
-
             drops[i]++;
         }
     }
+    setInterval(drawBinaryRain, 40);
 
-    setInterval(drawMatrix, 40); // Ajusta la velocidad de la lluvia
-
-    // --- LÓGICA DE PANTALLA DE CARGA ---
-    const loadingScreen = document.getElementById('loading-screen');
-    const progressBar = document.getElementById('progress-bar');
-    const loadingStatus = document.getElementById('loading-status');
-    const modalTerminos = document.getElementById('modal-terminos');
-    let width = 0;
-
-    const loadingMessages = [
-        'Estableciendo conexión segura...',
-        'Compilando módulos de defensa...',
-        'Verificando integridad del sistema...',
-        'Cargando protocolos éticos...',
-        'Acceso concedido.'
-    ];
-
-    const loadInterval = setInterval(() => {
-        width += Math.random() * 5; // Simula una carga irregular
-        if (width >= 100) {
-            width = 100;
-            progressBar.style.width = width + '%';
-            loadingStatus.textContent = loadingMessages[4];
-            clearInterval(loadInterval);
-            
-            // Ocultar pantalla de carga y mostrar modal de términos
-            setTimeout(() => {
-                loadingScreen.style.display = 'none';
-                modalTerminos.style.display = 'flex';
-            }, 500); // Espera medio segundo
-        } else {
-            progressBar.style.width = width + '%';
-            if (width > 80 && loadingStatus.textContent !== loadingMessages[3]) loadingStatus.textContent = loadingMessages[3];
-            else if (width > 50 && loadingStatus.textContent !== loadingMessages[2]) loadingStatus.textContent = loadingMessages[2];
-            else if (width > 20 && loadingStatus.textContent !== loadingMessages[1]) loadingStatus.textContent = loadingMessages[1];
-        }
-    }, 150); // Velocidad de la barra de carga
-
-    // --- LÓGICA DEL MODAL DE TÉRMINOS ---
-    const btnAceptar = document.getElementById('btn-aceptar');
+    // --- 2. Lógica de Carga y Modal ---
+    const loader = document.getElementById('loader');
+    const modal = document.getElementById('modal-terminos');
     const mainContent = document.getElementById('main-content');
+    const terminosTexto = document.getElementById('terminos-texto');
+    const btnAceptar = document.getElementById('btn-aceptar');
+    const loaderStatus = document.getElementById('loader-status');
 
-    // La función 'checkScroll' se llama desde el atributo 'onscroll' en el HTML
-    window.checkScroll = function(element) {
-        // Se activa el botón solo si el scroll llega al final (con un pequeño margen)
-        if (element.scrollTop + element.clientHeight >= element.scrollHeight - 20) {
+    // Simulación de carga
+    setTimeout(() => { loaderStatus.textContent = "Accediendo a registros..."; }, 1000);
+    setTimeout(() => { loaderStatus.textContent = "Interfaz lista. Esperando confirmación..."; }, 2500);
+
+    // Cuando la barra de carga termina (3s)
+    setTimeout(() => {
+        loader.style.display = 'none'; // Oculta el loader
+        modal.style.display = 'flex'; // Muestra el modal
+    }, 3000);
+
+    // Habilitar botón al hacer scroll
+    terminosTexto.addEventListener('scroll', () => {
+        // Comprueba si el usuario llegó al final (con un margen de 10px)
+        if (terminosTexto.scrollTop + terminosTexto.clientHeight >= terminosTexto.scrollHeight - 10) {
             btnAceptar.disabled = false;
         }
-    };
-
-    // Al hacer clic en Aceptar
-    btnAceptar.addEventListener('click', () => {
-        modalTerminos.style.display = 'none';
-        mainContent.style.display = 'block';
-        document.body.style.overflow = 'auto'; // Habilitar scroll en la página principal
     });
 
-    // --- LÓGICA DEL ROTADOR DE CITAS ---
-    const citaElement = document.getElementById('cita-codigo').querySelector('p');
+    // Al aceptar los términos
+    btnAceptar.addEventListener('click', () => {
+        modal.style.display = 'none';
+        mainContent.style.display = 'block';
+        document.body.classList.add('loaded'); // Permite el scroll en el body
+    });
+
+    // --- 3. Rotador de Citas ---
     const citas = [
-        "La curiosidad es el motor del hacker, pero la ética es su brújula.",
-        "No rompas cosas. Rómpelas de forma constructiva para entenderlas y mejorarlas.",
-        "Un sistema es tan fuerte como su eslabón más débil. Sé el que lo encuentra y lo reporta.",
-        "El conocimiento es poder. Úsalo para proteger, no para destruir.",
-        "Piensa como el atacante, actúa como el defensor."
+        "La curiosidad es el motor del hacker ético. La ética es su brújula.",
+        "Piensa defensivamente. Actúa éticamente.",
+        "No hay seguridad absoluta, solo grados de inseguridad.",
+        "Un sistema solo es tan fuerte como su eslabón más débil.",
+        "El conocimiento es poder, pero el carácter es respeto."
     ];
     let citaIndex = 0;
+    const citaElemento = document.getElementById('cita-texto');
 
     setInterval(() => {
         citaIndex = (citaIndex + 1) % citas.length;
-        citaElement.textContent = `"${citas[citaIndex]}"`;
-    }, 7000); // Cambia la cita cada 7 segundos
+        citaElemento.textContent = `"${citas[citaIndex]}"`;
+    }, 5000); // Cambia la cita cada 5 segundos
 
-    // --- LÓGICA DEL MINI-PUZZLE ---
-    const puzzleBtn = document.getElementById('puzzle-btn');
-    const puzzleInput = document.getElementById('puzzle-input');
+    // --- 4. Mini-Secreto (Puzzle) ---
+    const btnPuzzle = document.getElementById('btn-puzzle');
     const puzzleResult = document.getElementById('puzzle-result');
 
-    puzzleBtn.addEventListener('click', () => {
-        const respuesta = puzzleInput.value.toLowerCase().trim();
-        const respuestasCorrectas = ['proteger', 'defender', 'ayudar', 'mejorar la seguridad', 'reportar vulnerabilidades'];
-
-        // Comprobamos si la respuesta del usuario incluye alguna de las palabras clave
-        if (respuestasCorrectas.some(r => respuesta.includes(r))) {
-            puzzleResult.textContent = 'Acceso verificado. [PUZLE 1/3 COMPLETADO]';
-            puzzleResult.style.color = '#0f0'; // Verde
+    btnPuzzle.addEventListener('click', () => {
+        const respuesta = prompt("Descifra el código: 'UHJvdG9jb2xvTGV2aWF0aGFt'\n(Pista: Es un formato de codificación común)");
+        
+        // La respuesta es "ProtocoloLeviatham" (Base64)
+        if (respuesta && respuesta.toLowerCase() === "protocololeviatham") {
+            puzzleResult.textContent = "[+] Acertijo resuelto. (1/3 Completado)";
+            puzzleResult.style.color = "#0f0";
         } else {
-            puzzleResult.textContent = 'Intención no verificada. Reintenta.';
-            puzzleResult.style.color = '#f00'; // Rojo
+            puzzleResult.textContent = "[-] Intento fallido. Sigue intentando.";
+            puzzleResult.style.color = "red";
         }
-    });
-
-    // --- NUEVO: LISTENER PARA EL ENLACE DEL FOOTER ---
-    document.getElementById('revisar-terminos').addEventListener('click', (e) => {
-        e.preventDefault(); // Evitar que el link '#' mueva la página
-        modalTerminos.style.display = 'flex';
-        document.body.style.overflow = 'hidden'; // Bloquear scroll de nuevo
-        btnAceptar.disabled = true; // Re-deshabilitar el botón
-        document.getElementById('terminos-texto').scrollTop = 0; // Reiniciar el scroll del modal
     });
 
 });
