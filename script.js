@@ -130,4 +130,15 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
+    // --- NUEVO: LISTENER PARA EL ENLACE DEL FOOTER ---
+    document.getElementById('revisar-terminos').addEventListener('click', (e) => {
+        e.preventDefault(); // Evitar que el link '#' mueva la página
+        modalTerminos.style.display = 'flex';
+        document.body.style.overflow = 'hidden'; // Bloquear scroll de nuevo
+        btnAceptar.disabled = true; // Re-deshabilitar el botón
+        document.getElementById('terminos-texto').scrollTop = 0; // Reiniciar el scroll del modal
+    });
+
 });
+
+
