@@ -3,237 +3,360 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Leviatham</title>
+    <title>Protocolo Leviatham - Inicio</title>
     <link rel="icon" type="image/png" href="favicon.png">
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
     <style>
-        /* Estilos personalizados */
-        body {
-            /* Fuente principal Inter para texto legible */
-            font-family: 'Inter', sans-serif;
-            background-color: #1a0b2e;
-            color: #e0e0e0;
-            overflow-x: hidden; /* Evita el scroll horizontal */
-        }
-        
-        /* Estilo para la fuente del efecto matrix y títulos "hacker" */
-        .font-matrix {
-            font-family: 'Share Tech Mono', monospace;
+        /* --- ESTILOS GENERALES Y RESET --- */
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            font-family: 'Courier New', Courier, monospace;
+            color: #eee;
+            background-color: #0a0a0a;
+            overflow: hidden; /* Deshabilitar scroll al inicio */
         }
 
-        /* Canvas para el fondo animado */
+        /* --- FONDO DE LLUVIA BINARIA --- */
         #matrix-canvas {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            z-index: -1; /* Detrás de todo el contenido */
-            opacity: 0.3;
+            z-index: -1;
+            background-color: #000;
         }
 
-        /* Contenedor principal para centrar contenido sobre el canvas */
-        .main-container {
-            position: relative;
-            z-index: 1;
-            min-height: 100vh;
+        /* --- PANTALLA DE CARGA --- */
+        #loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #000;
+            z-index: 100;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: #90f; /* Morado */
+        }
+        #loading-text {
+            font-size: 1.2em;
+            text-shadow: 0 0 5px #90f;
+            margin-bottom: 20px;
+        }
+        #progress-bar-container {
+            width: 60%;
+            max-width: 400px;
+            border: 1px solid #90f;
+            padding: 3px;
+        }
+        #progress-bar {
+            width: 0%;
+            height: 20px;
+            background: #90f;
+            box-shadow: 0 0 10px #90f, 0 0 20px #90f;
+            transition: width 0.1s linear;
+        }
+
+        /* --- MODAL DE TÉRMINOS Y CONDICIONES --- */
+        #modal-terminos {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 90;
+            display: none; /* Oculto por defecto */
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        #modal-content {
+            background: #0a0a0a;
+            border: 2px solid #90f;
+            width: 90%;
+            max-width: 800px;
+            padding: 25px;
+            box-shadow: 0 0 20px #90f;
             display: flex;
             flex-direction: column;
         }
-
-        /* Efecto de neón/brillo para los colaboradores */
-        @keyframes neon-glow {
-            0%, 100% {
-                text-shadow: 0 0 5px #c039ff, 0 0 10px #c039ff, 0 0 15px #c039ff, 0 0 20px #9d00ff, 0 0 30px #9d00ff;
-            }
-            50% {
-                text-shadow: 0 0 10px #c039ff, 0 0 15px #c039ff, 0 0 25px #9d00ff, 0 0 35px #9d00ff, 0 0 45px #9d00ff;
-            }
+        #modal-content h2 {
+            color: #90f;
+            text-align: center;
+            border-bottom: 1px solid #90f;
+            padding-bottom: 10px;
+        }
+        #terminos-texto {
+            height: 400px; /* Tamaño grande como pediste */
+            overflow-y: scroll;
+            border: 1px dashed #555;
+            padding: 15px;
+            margin-bottom: 20px;
+            background: #050505;
+            color: #ccc;
+        }
+        #terminos-texto p {
+            margin-bottom: 15px;
+        }
+        #terminos-texto strong {
+            color: #f00; /* Rojo para énfasis */
+        }
+        #btn-aceptar {
+            padding: 15px;
+            font-size: 1.1em;
+            font-family: 'Courier New', Courier, monospace;
+            cursor: pointer;
+            border: none;
+            transition: background-color 0.3s, color 0.3s;
+        }
+        #btn-aceptar:disabled {
+            background: #333;
+            color: #666;
+            cursor: not-allowed;
+            border: 1px solid #444;
+        }
+        #btn-aceptar:enabled {
+            background: #90f;
+            color: #fff;
+            border: 1px solid #fff;
+            box-shadow: 0 0 15px #90f;
         }
 
-        .collaborator-card {
-            background-color: rgba(26, 11, 46, 0.6);
-            border: 1px solid #6d28d9;
-            backdrop-filter: blur(5px);
+        /* --- CONTENIDO PRINCIPAL --- */
+        #main-content {
+            display: none; /* Oculto por defecto */
+            position: relative;
+            z-index: 10;
+            padding: 20px;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        /* --- HEADER Y MENÚ --- */
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        h1 {
+            font-size: 3em;
+            color: #eee;
+            text-shadow: 0 0 10px #90f, 0 0 20px #90f;
+            margin: 0;
+        }
+        
+        nav {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 40px;
+        }
+        .nav-button {
+            display: inline-block;
+            padding: 12px 25px;
+            background-color: transparent;
+            border: 2px solid #90f;
+            color: #90f;
+            text-decoration: none;
+            font-size: 1em;
+            font-weight: bold;
+            text-transform: uppercase;
             transition: all 0.3s ease;
+            box-shadow: 0 0 5px #90f;
+        }
+        .nav-button:hover {
+            background-color: #90f;
+            color: #000;
+            box-shadow: 0 0 15px #90f, 0 0 25px #90f;
         }
 
-        .collaborator-card:hover {
-            transform: translateY(-5px) scale(1.05);
-            box-shadow: 0 0 15px #6d28d9, 0 0 25px #6d28d9;
+        /* --- CONTENIDO DE INICIO --- */
+        .content-section {
+            background: rgba(10, 10, 10, 0.8);
+            border: 1px solid #333;
+            padding: 20px;
+            margin-bottom: 25px;
         }
         
-        .collaborator-name {
-            font-family: 'Share Tech Mono', monospace;
-            color: #e9d5ff;
-            animation: neon-glow 2.5s ease-in-out infinite;
-        }
-        
-        /* Líneas decorativas en los bordes */
-        .border-line {
-            position: fixed;
-            background: #6d28d9;
-            box-shadow: 0 0 10px #6d28d9;
-        }
-        
-        .line-left {
-            top: 0;
-            left: 10px;
-            width: 2px;
-            height: 100%;
-            opacity: 0.5;
-        }
-        
-        .line-right {
-            top: 0;
-            right: 10px;
-            width: 2px;
-            height: 100%;
-            opacity: 0.5;
+        .warning-box {
+            border: 1px dashed #f00;
+            padding: 10px;
+            text-align: center;
+            color: #f00;
         }
 
-        /* Usar la fuente hacker para los títulos principales */
-        .font-matrix-title {
-            font-family: 'Share Tech Mono', monospace;
+        .fire-title {
+            font-size: 2.5em;
+            color: #f00;
+            text-align: center;
+            animation: fire-effect 1.5s infinite alternate;
         }
 
-        @media (max-width: 768px) {
-            .line-left, .line-right {
-                left: 5px;
-                right: 5px;
-                width: 1px;
-            }
+        /* Animación de FUEGO (resplandor) */
+        @keyframes fire-effect {
+            0% { text-shadow: 0 0 5px #fff, 0 0 10px #fff, 0 0 15px #ff0000, 0 0 20px #ff0000; }
+            100% { text-shadow: 0 0 10px #fff, 0 0 20px #ff4500, 0 0 30px #ff4500, 0 0 40px #ff4500; }
         }
+
+        .texto-rojo {
+            color: #f00;
+            font-weight: bold;
+        }
+
+        #cita-codigo {
+            font-style: italic;
+            font-size: 1.1em;
+            border-left: 3px solid #90f;
+            padding-left: 15px;
+            color: #ccc;
+        }
+        #cita-codigo p {
+            margin: 0;
+        }
+
+        /* --- PUZZLE --- */
+        #puzzle {
+            border: 1px dashed #555;
+            padding: 15px;
+        }
+        #puzzle input {
+            background: #111;
+            border: 1px solid #555;
+            color: #eee;
+            padding: 8px;
+            font-family: 'Courier New', Courier, monospace;
+        }
+        #puzzle button {
+            background: #555;
+            border: 1px solid #888;
+            color: #eee;
+            padding: 8px;
+            cursor: pointer;
+        }
+        #puzzle-result {
+            margin-top: 10px;
+            color: #0f0; /* Verde para éxito */
+        }
+
     </style>
 </head>
-<body class="font-matrix"> <canvas id="matrix-canvas"></canvas>
+<body>
 
-    <div class="border-line line-left hidden md:block"></div>
-    <div class="border-line line-right hidden md:block"></div>
+    <canvas id="matrix-canvas"></canvas>
 
-    <div class="main-container p-4 md:p-8">
-        
-        <header class="w-full max-w-6xl mx-auto mb-16">
-            <nav class="flex flex-col md:flex-row justify-between items-center rounded-lg p-4" style="background-color: rgba(20, 5, 35, 0.7); border: 1px solid #4c1d95; backdrop-filter: blur(5px);">
-                <div class="text-2xl font-bold text-purple-300 mb-4 md:mb-0">Protocolo Leviatham</div>
-                <ul class="flex flex-wrap justify-center gap-x-4 gap-y-2 md:gap-x-6">
-                    <li><a href="https://protocololeviatham.github.io/foro.net/" class="text-gray-300 hover:text-purple-400 font-medium transition-colors duration-300 text-sm md:text-base">FORO</a></li>
-                    <li><a href="#" class="text-gray-300 hover:text-purple-400 font-medium transition-colors duration-300 text-sm md:text-base">COMUNIDAD</a></li>
-                    <li><a href="#" class="text-gray-300 hover:text-purple-400 font-medium transition-colors duration-300 text-sm md:text-base">HERRAMIENTAS</a></li>
-                    <li><a href="#" class="text-gray-300 hover:text-purple-400 font-medium transition-colors duration-300 text-sm md:text-base">CÓDIGOS</a></li>
-                    <li><a href="#" class="text-gray-300 hover:text-purple-400 font-medium transition-colors duration-300 text-sm md:text-base">SOPORTE</a></li>
+    <div id="loading-screen">
+        <div id="loading-text">INICIANDO PROTOCOLO LEVIATHAM...</div>
+        <div id="progress-bar-container">
+            <div id="progress-bar"></div>
+        </div>
+        <div id="loading-status" style="margin-top: 10px;">Cargando interfaz segura...</div>
+    </div>
+
+    <div id="modal-terminos">
+        <div id="modal-content">
+            <h2>TÉRMINOS Y CONDICIONES DE USO</h2>
+            <div id="terminos-texto" onscroll="checkScroll(this)">
+                <p>Bienvenido a Protocolo Leviatham. Antes de acceder a nuestra comunidad y herramientas, es imperativo que comprendas y aceptes las siguientes reglas. El acceso está condicionado a tu aceptación de estos términos.</p>
+                
+                <h3>1. PROPÓSITO ESTRICTAMENTE EDUCATIVO Y ÉTICO</h3>
+                <p>Todo el contenido, herramientas, códigos y discusiones en esta plataforma (FORO, COMUNIDAD, HERRAMIENTAS, CODIGOS, SOPORTE) se proporcionan con un propósito <strong>única y exclusivamente educativo y defensivo</strong> (Hacking Ético / White Hat). El objetivo es formar a profesionales de la seguridad, investigadores y entusiastas en la identificación y mitigación de vulnerabilidades para proteger sistemas, no para atacarlos.</p>
+
+                <h3>2. PROHIBICIÓN DE ACTIVIDAD ILEGAL</h3>
+                <p>Se prohíbe terminantemente el uso de la información o herramientas aquí obtenidas para cualquier actividad maliciosa, destructiva o ilegal. Esto incluye, pero no se limita a:</p>
+                <ul>
+                    <li>Intentos de acceso no autorizado a sistemas, redes o datos (hacking).</li>
+                    <li>Creación o distribución de malware, ransomware, virus o cualquier software malintencionado.</li>
+                    <li>Ataques de denegación de servicio (DoS/DDoS).</li>
+                    <li>Suplantación de identidad (phishing) o fraude.</li>
+                    <li>Explotación de vulnerabilidades en sistemas públicos o privados sin autorización explícita y por escrito del propietario (Bug Bounty o Pentesting autorizado).</li>
                 </ul>
+
+                <h3>3. MARCO LEGAL (ARGENTINA)</h3>
+                <p>Al aceptar estos términos, reconoces estar al tanto de la legislación vigente sobre delitos informáticos en tu jurisdicción. En Argentina, esto incluye la <strong>Ley 26.388 de Delitos Informáticos</strong>, que modifica el Código Penal y sanciona conductas como:</p>
+                <ul>
+                    <li><strong>Art. 153 BIS:</strong> Acceso ilegítimo a un sistema o dato informático de acceso restringido.</li>
+                    <li><strong>Art. 157 BIS:</strong> Interceptación o captura indebida de comunicaciones o datos.</li>
+                    <li><strong>Art. 183:</strong> Daño o alteración de datos (Daño informático).</li>
+                </ul>
+                <p>El desconocimiento de la ley no exime de responsabilidad. Cualquier actividad que infrinja estas y otras leyes aplicables será considerada una violación grave de estos términos.</p>
+
+                <h3>4. DESLINDE DE RESPONSABILIDAD</h3>
+                <p><strong>Protocolo Leviatham y sus administradores NO se hacen responsables bajo ninguna circunstancia del mal uso que cualquier individuo pueda dar a la información, conocimientos o herramientas compartidas en esta comunidad.</strong></p>
+                <p>El usuario es el único responsable de sus acciones. Si utilizas lo aprendido aquí para cometer actos ilícitos, serás el único responsable legal y penal de tus actos ante las autoridades pertinentes. Esta comunidad no aprueba, no apoya y no participará en actividades ilegales.</p>
+
+                <h3>5. NORMAS DE LA COMUNIDAD</h3>
+                <p>Nos esforzamos por mantener un ambiente sano y colaborativo. La toxicidad, el ego desmedido, el secretismo malintencionado y la falta de respeto no serán tolerados. La colaboración y el aprendizaje mutuo son nuestros pilares.</p>
+                <p>Al hacer scroll y aceptar, declaras haber leído, entendido y aceptado en su totalidad estos términos. Te comprometes a usar esta plataforma de manera ética, responsable y siempre dentro del marco de la ley. Si no estás de acuerdo, por favor, cierra esta página inmediatamente.</p>
+            </div>
+            <button id="btn-aceptar" disabled>He leído y acepto los Términos y Condiciones</button>
+        </div>
+    </div>
+
+    <div id="main-content">
+        <header>
+            <h1>PROTOCOLO LEVIATHAM</h1>
+            <nav>
+                <a href="https://protocololeviatham.github.io/foro.net/" class="nav-button">FORO</a>
+                <a href="https://protocololeviatham.github.io/comunidad.net/" class="nav-button">COMUNIDAD</a>
+                <a href="https://protocololeviatham.github.io/herramientas.net/" class="nav-button">HERRAMIENTAS</a>
+                <a href="https://protocololeviatham.github.io/codigos.net/" class="nav-button">CODIGOS</a>
+                <a href="https://protocololeviatham.github.io/soporte.net-/" class="nav-button">SOPORTE</a>
             </nav>
         </header>
 
-        <main class="flex-grow flex flex-col items-center justify-center text-center px-4">
-            <div class="p-8 rounded-xl max-w-3xl" style="background-color: rgba(20, 5, 35, 0.7); border: 1px solid #4c1d95; backdrop-filter: blur(5px);">
-                <h1 class="text-6xl md:text-8xl font-black text-purple-300 uppercase mb-6 font-matrix-title" style="text-shadow: 0 0 10px #9d00ff;">
-                    BIENVENIDO
-                </h1>
-                <p class="font-sans text-lg md:text-2xl text-gray-200 leading-relaxed">
-                    Explora, aprende y comparte conocimientos de seguridad y hacking ético con nuestra comunidad.
-                </p>
+        <main>
+            <div class="content-section warning-box">
+                
+                <p>Para mejorar la experiencia de su uso y navegación, cambie al modo "sitio para computadora" en su navegador móvil.</p>
+            </div>
+
+            <div class="content-section">
+                <h2 class="fire-title">¿Qué es el Protocolo Leviatham?</h2>
+                <p>El Protocolo Leviatham no es solo un sitio web; es un compromiso.</p>
+                <p>Es el principio de que la seguridad informática y el hacking pueden y deben ser fuerzas para el bien.</p>
+                <p>En un mundo donde el término "hacker" ha sido distorsionado, nosotros lo reivindicamos.</p>
+                <p>"Leviatham" representa la inmensidad del sistema digital: colosal, complejo e interconectado.</p>
+                <p>Nuestro "Protocolo" es la metodología ética que usamos para navegarlo y protegerlo.</p>
+                <p>Esta plataforma fue fundada con un objetivo principal: crear la comunidad de Hacking Ético (White Hat) más saludable y constructiva de la red.</p>
+                
+                <h3>Un Refugio Sano</h3>
+                <p>Estamos cansados de la toxicidad, el secretismo y el ego que plagan muchas esferas de la seguridad. Aquí, la colaboración reemplaza a la competencia destructiva, y la pregunta es bienvenida.</p>
+                
+                <h3>Conocimiento Defensivo</h3>
+                <p>Creemos que la mejor defensa se construye entendiendo la ofensiva. Compartimos herramientas, códigos y tácticas con un propósito estrictamente educativo y defensivo.</p>
+                
+                <h3>Ética Inquebrantable</h3>
+                <p>Operamos bajo un código de conducta riguroso. Exploramos vulnerabilidades para repararlas, no para explotarlas.</p>
+                
+                <p class="texto-rojo">Protocolo Leviatham es tu arsenal, tu laboratorio y tu equipo. Eres bienvenido, siempre que tu sombrero sea blanco.</p>
+            </div>
+
+            <div class="content-section">
+                <h3>Módulo de "Cita del Código"</h3>
+                <div id="cita-codigo">
+                    <p>"La curiosidad es el motor del hacker, pero la ética es su brújula."</p>
+                </div>
+            </div>
+
+            <div class="content-section" id="puzzle">
+                <h3>Minisecreto: Desafío de Acceso</h3>
+                <p>Responde la pregunta para verificar tu intención:</p>
+                <label for="puzzle-input">¿Cuál es el objetivo principal de un 'White Hat'? </label>
+                <input type="text" id="puzzle-input" placeholder="Tu respuesta...">
+                <button id="puzzle-btn">Verificar</button>
+                <div id="puzzle-result"></div>
             </div>
         </main>
-
-        <section class="w-full max-w-4xl mx-auto my-16 px-4">
-            <div class="rounded-lg p-6 md:p-8" style="background-color: rgba(20, 5, 35, 0.7); border: 1px solid #4c1d95; backdrop-filter: blur(5px);">
-                <h2 class="text-3xl font-bold text-purple-300 text-center mb-6 font-matrix-title">// NOTICIA DEL DÍA //</h2>
-                
-                <article class="border-b border-purple-800 pb-4 mb-4">
-                    
-                    <h4 class="text-xl font-semibold text-gray-200 font-sans mb-3">Un Nuevo Comienzo: Mensaje De Su Fundador</h4>
-                    
-                    <p class="font-sans text-gray-300 leading-relaxed">
-                        Un mensaje de nuestro fundador, KaliHunter32:
-                        <br><br>
-                        Durante un buen tiempo, fui parte de una comunidad bastante grande en la aplicación Telegram. Para ser exactos, era un grupo con más de quince mil miembros. Dentro de ese espacio, la gente me conocía por un número, simplemente como el Número 32. Ese era mi nombre, mi identificación.
-Mi habilidad principal, mi especialidad, siempre fue la seguridad ofensiva. Esto significa que me dedicaba a revisar a fondo las infraestructuras web y los sistemas digitales de diferentes organizaciones, pero no para protegerlos, sino para encontrar sus puntos débiles y sus fallos de seguridad. Era bueno en eso, muy bueno.
-Mi trabajo consistía en derribar sitios web y, una vez caídos, los desmantelaba para asegurar que la comunidad dejara su firma o huella en ellos, como prueba de que habíamos estado allí. Mi reputación creció gracias a que llegué a tener el control de una de las botnets más potentes y eficaces que existían dentro de ese grupo. Una botnet es un conjunto de computadoras controladas de forma remota, y la mía era superior a las demás. Es por esa capacidad y ese poder que me gané el nombre de KaliHunter.
-Sin embargo, con el paso del tiempo, mi perspectiva empezó a cambiar. Me fui dando cuenta de que los objetivos de ese grupo, las cosas que buscaban y lo que hacían, ya no encajaban con mis propios principios o con la dirección que quería tomar en mi vida. Los fines que perseguían se sentían, de repente, equivocados..
-                        <br>
-                        Tomé la decisión de alejarme de todo por mi propia seguridad y, sobre todo, para poder empezar algo completamente nuevo y diferente. Necesitaba un cambio de rumbo.
-De esa decisión firme y personal nace este proyecto, al que he llamado 'Protocolo Leviatán'. Mi meta ahora es dedicar toda esa experiencia y conocimiento a crear una comunidad que sea sana. Un lugar donde la gente pueda aprender cosas nuevas, compartir información y mejorar juntos sus habilidades, pero siempre, y esto es lo importante, dentro de un marco de ética y legalidad.
-Aquí, el conocimiento que tengo y que podemos generar entre todos es para construir cosas útiles, para desarrollar, para proteger, y no para la destrucción o para causar problemas. Esta es una invitación abierta. Bienvenidos sean todos a este nuevo camino.
-                        <br>
-                    </p>
-                </article>
-                
-                </div>
-        </section>
-        <footer class="w-full max-w-6xl mx-auto mt-16 py-8">
-            <h3 class="text-center text-2xl text-purple-300 font-bold mb-8 font-matrix-title">COLABORADORES</h3>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div class="collaborator-card rounded-lg p-6 text-center">
-                    <h4 class="collaborator-name text-2xl font-bold">System404G</h4>
-                </div>
-                <div class="collaborator-card rounded-lg p-6 text-center">
-                    <h4 class="collaborator-name text-2xl font-bold">Team Virus</h4>
-                </div>
-                <div class="collaborator-card rounded-lg p-6 text-center">
-                    <h4 class="collaborator-name text-2xl font-bold">Lazarus</h4>
-                </div>
-            </div>
-        </footer>
-
     </div>
 
-    <script>
-        const canvas = document.getElementById('matrix-canvas');
-        const ctx = canvas.getContext('2d');
-
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
-
-        let katakana = 'アァカサタナハマヤャラワガザダバパイィキシチニヒミリヰギジヂビピウゥクスツヌフムユュルグズブヅプエェケセテネヘメレヱゲゼデベペオォコソトノホモヨョロヲゴゾドボポヴッン';
-        let latin = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890';
-        let chars = katakana + latin;
-        chars = chars.split('');
-
-        const fontSize = 16;
-        let columns = Math.floor(canvas.width / fontSize);
-
-        let drops = [];
-        for (let x = 0; x < columns; x++) {
-            drops[x] = 1;
-        }
-
-        function drawMatrix() {
-            ctx.fillStyle = 'rgba(26, 11, 46, 0.05)';
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-            ctx.fillStyle = '#9d00ff'; 
-            ctx.font = fontSize + 'px "Share Tech Mono", monospace';
-
-            for (let i = 0; i < drops.length; i++) {
-                let text = chars[Math.floor(Math.random() * chars.length)];
-                ctx.fillText(text, i * fontSize, drops[i] * fontSize);
-                drops[i]++;
-                if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
-                    drops[i] = 0;
-                }
-            }
-        }
-
-        setInterval(drawMatrix, 40);
-
-        window.addEventListener('resize', () => {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-            columns = Math.floor(canvas.width / fontSize);
-            drops = [];
-            for (let x = 0; x < columns; x++) {
-                drops[x] = 1;
-            }
-        });
-    </script>
-
+    <script src="script.js"></script>
 </body>
-
 </html>
-
-
